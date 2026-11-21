@@ -1,0 +1,121 @@
+{
+  "manifestVersion": 2,
+  "execution": "trusted-worker",
+  "id": "seodraft",
+  "name": "seodraft",
+  "version": "0.1.0",
+  "description": "Run your seodraft content pipeline from Orca: pipeline, content map, evidence, profile, agent routines and a feed of what your agents do in seodraft.",
+  "author": {
+    "name": "ch0rch",
+    "url": "https://seodraft.app"
+  },
+  "repository": "https://github.com/ch0rch/seodraft-orca",
+  "license": "MIT",
+  "homepage": "https://seodraft.app",
+  "icon": "assets/icon.png",
+  "engines": {
+    "orca": ">=1.4.259"
+  },
+  "pluginApi": 1,
+  "main": "worker/dist/main.mjs",
+  "capabilities": [
+    { "kind": "storage:own" },
+    { "kind": "secrets:own" },
+    { "kind": "settings:own" },
+    { "kind": "notifications:show" },
+    { "kind": "workspace:read" },
+    { "kind": "agent:read" },
+    { "kind": "agent:launch" },
+    { "kind": "automation:read" },
+    { "kind": "automation:write" }
+  ],
+  "contributes": {
+    "panels": [
+      {
+        "id": "seodraft",
+        "title": "seodraft",
+        "icon": "file-text",
+        "entry": "src/panel.tsx",
+        "ui": "components"
+      }
+    ],
+    "commands": [
+      { "id": "seodraft.refresh", "title": "seodraft: Refresh pipeline" },
+      { "id": "seodraft.signOut", "title": "seodraft: Sign out" }
+    ],
+    "statusBarItems": [
+      {
+        "id": "pipeline",
+        "text": "seodraft",
+        "icon": "file-text",
+        "tooltip": "seodraft pipeline",
+        "command": "seodraft.refresh"
+      }
+    ],
+    "hooks": [{ "event": "agent.tool.before" }, { "event": "agent.tool.after" }],
+    "settings": [
+      {
+        "key": "mcpUrl",
+        "title": "seodraft MCP URL",
+        "description": "The seodraft MCP endpoint the plugin talks to.",
+        "type": "string",
+        "default": "https://seodraft.app/mcp"
+      },
+      {
+        "key": "oauthPort",
+        "title": "OAuth callback port",
+        "description": "Local port that receives the sign-in callback on 127.0.0.1. Changing it asks you to connect again.",
+        "type": "integer",
+        "default": 47321,
+        "minimum": 1024,
+        "maximum": 65535
+      },
+      {
+        "key": "pollMinutes",
+        "title": "Refresh interval (minutes)",
+        "description": "How often the status bar item re-reads the pipeline.",
+        "type": "integer",
+        "default": 10,
+        "minimum": 2,
+        "maximum": 120
+      },
+      {
+        "key": "defaultAgent",
+        "title": "Default agent",
+        "description": "Agent that routines and \"Ask agent to fix\" start with.",
+        "type": "string",
+        "default": "claude",
+        "enum": ["claude", "codex", "omp", "opencode", "gemini", "cursor", "copilot"]
+      },
+      {
+        "key": "mcpServerName",
+        "title": "MCP server name",
+        "description": "Name your agents use for the seodraft MCP server.",
+        "type": "string",
+        "default": "seodraft"
+      },
+      {
+        "key": "paidCallCeilingUsd",
+        "title": "Paid call ceiling (USD)",
+        "description": "Refuse an agent's seodraft call whose estimated cost is above this. 0 turns the guard off; blocks only in Claude Code.",
+        "type": "number",
+        "default": 0,
+        "minimum": 0
+      },
+      {
+        "key": "approvalsFromPanelOnly",
+        "title": "Approve maps and profiles from the panel only",
+        "description": "Refuse an agent's approve_content_map, approve_profile and add_cluster_topics calls, so those approvals happen in this panel. Blocks only in Claude Code.",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "notifyOnReview",
+        "title": "Notify when posts are ready for review",
+        "description": "Show a desktop notification when more posts are waiting for your review than last time.",
+        "type": "boolean",
+        "default": true
+      }
+    ]
+  }
+}

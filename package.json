@@ -1,0 +1,19 @@
+{
+  "name": "seodraft-orca",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p .",
+    "test": "orca plugin test . --json"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/node": "^22",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.9.0",
+    "zod": "^4"
+  }
+}
