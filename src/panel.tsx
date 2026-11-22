@@ -12,6 +12,7 @@ import {
   Row,
   Select,
   set,
+  settings,
   shell,
   Spinner,
   Stack,
@@ -96,7 +97,9 @@ export function setup(ctx: PanelContext): void {
         void loadTab()
       }
     }),
-    plugin.on('activity.appended', ({ entry }) => appendActivity(entry))
+    plugin.on('activity.appended', ({ entry }) => appendActivity(entry)),
+    // The person changed a setting in Orca's Settings while the panel is open.
+    settings.onDidChange(({ key }) => void loadSettings(key))
   )
   void loadSettings()
   void attempt(headerError, loadOrcaWorkspaces)

@@ -132,6 +132,7 @@ const en = {
   runsIn: 'Runs in Orca workspace',
   agent: 'Agent',
   mcpNeeded: 'The agent needs the seodraft MCP connected',
+  mcpAddTo: (agent: string, name: string) => `Add this server to ${agent} under the name "${name}":`,
   templates: 'Routines you can create',
   createRoutine: 'Create routine',
   runNow: 'Run now',
@@ -166,7 +167,8 @@ const en = {
   colPaid: 'Paid',
   colOutcome: 'Outcome',
   clear: 'Clear',
-  guardsNote: 'Guards block only Claude Code; other agents are recorded.',
+  guardsNote:
+    'Lists the calls Orca reports to plugins. Orca reports Claude Code, the only agent that obeys a guard. It does not report omp (Orca 1.4.269), so omp is not listed and guards do not apply to it.',
   deniedCount: (count: number) => `${count} denied`,
   errorCount: (count: number) => `${count} ${count === 1 ? 'error' : 'errors'}`,
   paidEstimate: (usd: string) => `about USD ${usd} in paid calls`
@@ -306,6 +308,8 @@ const es: Strings = {
   runsIn: 'Corre en el workspace de Orca',
   agent: 'Agente',
   mcpNeeded: 'El agente necesita tener conectado el MCP de seodraft',
+  mcpAddTo: (agent: string, name: string) =>
+    `Agregá este servidor a ${agent} con el nombre "${name}":`,
   templates: 'Rutinas que podés crear',
   createRoutine: 'Crear rutina',
   runNow: 'Correr ahora',
@@ -340,7 +344,8 @@ const es: Strings = {
   colPaid: 'Pago',
   colOutcome: 'Resultado',
   clear: 'Limpiar',
-  guardsNote: 'Las guardas solo frenan a Claude Code; de los otros agentes queda el registro.',
+  guardsNote:
+    'Muestra las llamadas que Orca le informa al plugin. Orca informa las de Claude Code, el único agente que obedece una guarda. Las de omp no las informa (Orca 1.4.269): no aparecen acá y las guardas no las frenan.',
   deniedCount: (count: number) => `${count} ${count === 1 ? 'frenada' : 'frenadas'}`,
   errorCount: (count: number) => `${count} con error`,
   paidEstimate: (usd: string) => `unos USD ${usd} en llamadas pagas`

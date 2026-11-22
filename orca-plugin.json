@@ -3,7 +3,7 @@
   "execution": "trusted-worker",
   "id": "seodraft",
   "name": "seodraft",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Run your seodraft content pipeline from Orca: pipeline, content map, evidence, profile, agent routines and a feed of what your agents do in seodraft.",
   "author": {
     "name": "ch0rch",

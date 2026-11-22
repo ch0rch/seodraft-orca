@@ -24,7 +24,7 @@ Run your [seodraft](https://seodraft.app) content pipeline from [Orca](https://o
 | Evidence | The evidence bank, filtered by status. Add a piece in your own words. |
 | Profile | Edit the business profile agents write from, and approve it when it has no approval on record. |
 | Routines | Create scheduled agent runs (Orca automations), run one now, and set up an Orca bot. |
-| Activity | Every seodraft tool call your agents made from Orca terminals, with what it probably cost. |
+| Activity | The seodraft tool calls Orca reports from your agents' terminals, with what each probably cost. See [Guards](#guards) for which agents that covers. |
 
 Two things stay in seodraft.app, and the panel links to them: **publishing** an article, and **accepting or rejecting evidence** an agent proposed.
 
@@ -38,11 +38,13 @@ A routine is an Orca automation the plugin creates for you: an agent, a prompt a
 | Weekly pipeline review | Mondays 9:00 | Read-only report: what waits for you, what failed, free calendar days, pending evidence. |
 | Evidence the next posts need | Thursdays 9:00 | Read-only: the first-hand evidence the next three articles still lack, as questions to you. |
 
-The agent that runs a routine needs the seodraft MCP server connected. For Claude Code:
+The agent that runs a routine needs the seodraft MCP server connected, under the name in the "MCP server name" setting. For Claude Code:
 
 ```sh
 claude mcp add --transport http seodraft https://seodraft.app/mcp
 ```
+
+For any other agent, add `https://seodraft.app/mcp` as an HTTP MCP server the way that agent does it. The Routines tab shows the right hint for the agent you pick.
 
 You can edit a routine's schedule and prompt, pause it or delete it from the panel.
 
@@ -55,7 +57,15 @@ Both are off until you turn them on in Settings → Plugins → seodraft.
 | Paid call ceiling (USD) | Refuses an agent's seodraft call whose estimated cost is above the ceiling. `0` is off. |
 | Approve maps and profiles from the panel only | Refuses an agent's `approve_content_map`, `approve_profile` and `add_cluster_topics`. |
 
-Guards refuse calls only in Claude Code, the one agent that waits for Orca before running a tool. Calls from other agents are recorded in Activity and not refused. Estimates are fixed per tool, not what DataForSEO charged.
+Guards and Activity only see the tool calls Orca reports to plugins, so they depend on the agent:
+
+| Agent | Listed in Activity | Guards refuse the call |
+|---|---|---|
+| Claude Code | Yes | Yes: it is the one agent that waits for Orca before running a tool |
+| omp | No: Orca 1.4.269 does not report its tool calls to plugins | No |
+| Other agents | Only if Orca reports their calls | No |
+
+Estimates are fixed per tool, not what DataForSEO charged.
 
 ## Other settings
 

@@ -1,5 +1,6 @@
-// The approvals a person gives from the panel: nothing is sent before the checkbox, and what
-// is sent is what seodraft records as approved.
+// What a person does from the panel. Approvals: nothing is sent before the checkbox, and what
+// is sent is what seodraft records as approved. Also signing in, and the agent routines use.
+import { settings } from 'orca'
 import { afterEach, assert, mockHost, mount, test, type TestPanel } from 'orca/testing'
 import * as panelModule from './panel'
 import type { JsonObject } from './protocol'
@@ -110,4 +111,36 @@ test('offers to connect while signed out and opens the prepared sign-in URL', as
     { url: 'https://clerk.seodraft.app/oauth/authorize?state=abc' }
   ])
   assert.deepEqual(panel.refusals, [])
+})
+
+test('follows a changed default agent while open and shows how to connect that agent', async () => {
+  const host = mockHost({
+    settings: { defaultAgent: 'claude' },
+    requests: {
+      'auth.status': { connected: true, authUrl: null, error: null, secrets: 'os-keyring' },
+      'state.get': { selectedWorkspaceId: 'w1' },
+      'orca.workspaces': { workspaces: [], focusedId: null },
+      'seodraft.call': { result: WORKSPACES },
+      'routines.list': { routines: [] },
+      'bots.list': { bots: [] }
+    }
+  })
+  panel = await mount(panelModule, { host, persisted: { plugin: { tab: 'routines' } } })
+  assert.equal(panel.valueOf({ label: 'Agent' }), 'claude')
+  assert.ok(panel.find({ text: 'claude mcp add --transport http seodraft https://seodraft.app/mcp' }))
+
+  // As the person does in Orca's Settings.
+  await settings.set('defaultAgent', 'omp')
+  await panel.settled()
+  assert.equal(panel.valueOf({ label: 'Agent' }), 'omp')
+  assert.equal(panel.find({ text: /claude mcp add/ }), null)
+  assert.ok(panel.find({ text: 'Add this server to omp under the name "seodraft":' }))
+
+  // Another setting changing must not undo an agent picked by hand for this run.
+  await panel.select({ label: 'Agent' }, 'codex')
+  await settings.set('mcpServerName', 'sd')
+  await panel.settled()
+  assert.equal(panel.valueOf({ label: 'Agent' }), 'codex')
+  assert.ok(panel.find({ text: 'Add this server to codex under the name "sd":' }))
+  assert.deepEqual(panel.errors, [])
 })

@@ -193,6 +193,7 @@ export function RoutinesTab() {
   const orcaList = read(orcaWorkspaces)
   const opened = list?.find((routine) => routine.automationId === read(openId))
   const url = read(mcpUrl)
+  const chosen = read(agent)
   return (
     <Stack gap="md">
       {problem !== null ? (
@@ -213,12 +214,19 @@ export function RoutinesTab() {
       />
       <Select
         label={s.agent}
-        value={read(agent)}
+        value={chosen}
         options={AGENTS.map((value) => ({ value, label: value }))}
         onChange={(value) => set(agent, value)}
       />
       <Callout tone="neutral" icon="plug" title={s.mcpNeeded}>
-        <Code block>{`claude mcp add --transport http ${read(serverName)} ${url}`}</Code>
+        {chosen === 'claude' ? (
+          <Code block>{`claude mcp add --transport http ${read(serverName)} ${url}`}</Code>
+        ) : (
+          <Stack gap="xs">
+            <Text>{s.mcpAddTo(chosen, read(serverName))}</Text>
+            <Code block>{url}</Code>
+          </Stack>
+        )}
       </Callout>
       <Heading level={3}>{s.templates}</Heading>
       <List label={s.templates}>

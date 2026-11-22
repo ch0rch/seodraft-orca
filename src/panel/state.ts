@@ -127,15 +127,28 @@ export function routineTarget(): RoutineTarget | null {
   }
 }
 
-export async function loadSettings(): Promise<void> {
+/**
+ * Reads the settings the panel shows. With `changed`, only that one: a person who picked
+ * another agent for this run keeps it when an unrelated setting changes.
+ */
+export async function loadSettings(changed?: string): Promise<void> {
   const stored = await settings.get()
-  if (typeof stored.mcpUrl === 'string' && stored.mcpUrl !== '') {
+  const wanted = (key: string): boolean => changed === undefined || changed === key
+  if (wanted('mcpUrl') && typeof stored.mcpUrl === 'string' && stored.mcpUrl !== '') {
     set(mcpUrl, stored.mcpUrl)
   }
-  if (typeof stored.mcpServerName === 'string' && stored.mcpServerName !== '') {
+  if (
+    wanted('mcpServerName') &&
+    typeof stored.mcpServerName === 'string' &&
+    stored.mcpServerName !== ''
+  ) {
     set(serverName, stored.mcpServerName)
   }
-  if (typeof stored.defaultAgent === 'string' && AGENTS.includes(stored.defaultAgent)) {
+  if (
+    wanted('defaultAgent') &&
+    typeof stored.defaultAgent === 'string' &&
+    AGENTS.includes(stored.defaultAgent)
+  ) {
     set(agent, stored.defaultAgent)
   }
 }
